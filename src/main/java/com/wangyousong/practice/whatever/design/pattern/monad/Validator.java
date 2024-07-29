@@ -19,19 +19,19 @@ public class Validator<T> {
         return new Validator<>(Objects.requireNonNull(obj));
     }
 
-    public Validator<T> validator(Predicate<? super T> validation, String message) {
-        if (!validation.test(obj)) {
-            exceptions.add(new IllegalStateException(message));
-        }
-        return this;
-    }
-
     public <U> Validator<T> validator(
             Function<? super T, ? extends U> projection,
             Predicate<? super U> validation,
             String message
     ) {
         return validator(projection.andThen(validation::test)::apply, message);
+    }
+
+    private Validator<T> validator(Predicate<? super T> validation, String message) {
+        if (!validation.test(obj)) {
+            exceptions.add(new IllegalStateException(message));
+        }
+        return this;
     }
 
     public T get() {
