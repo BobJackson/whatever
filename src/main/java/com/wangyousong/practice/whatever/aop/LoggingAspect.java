@@ -1,10 +1,9 @@
 package com.wangyousong.practice.whatever.aop;
 
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -20,13 +19,33 @@ public class LoggingAspect {
 
     @Around(value = "publicMethod()")
     public Object logAround(ProceedingJoinPoint pjp) throws Throwable {
-        Object[] args = pjp.getArgs();
-        String methodName = pjp.getSignature().getName();
-        log.debug(">> {}() - {}", methodName, Arrays.toString(args));
+        String methodName = logMethodNameAndArguments(pjp);
 
         Object result = pjp.proceed();
 
-        log.debug("<< {}() - {}", methodName, result);
+        logMethodNameAndResult(result, methodName);
         return result;
+    }
+
+    @Before(value = "publicMethod()")
+    public void logBefore(JoinPoint joinPoint) {
+        logMethodNameAndArguments(joinPoint);
+    }
+
+    private static String logMethodNameAndArguments(JoinPoint joinPoint) {
+        Object[] args = joinPoint.getArgs();
+        String methodName = joinPoint.getSignature().getName();
+        log.debug(">> {}() - {}", methodName, Arrays.toString(args));
+        return methodName;
+    }
+
+    @AfterReturning(value = "publicMethod()", returning = "result")
+    public void logAfter(JoinPoint joinPoint, Object result) {
+        String methodName = joinPoint.getSignature().getName();
+        logMethodNameAndResult(result, methodName);
+    }
+
+    private static void logMethodNameAndResult(Object result, String methodName) {
+        log.debug("<< {}() - {}", methodName, result);
     }
 }
