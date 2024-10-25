@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@Qualifier("GoodServiceB")
+@Qualifier("goodServiceB")
 public class GoodServiceB implements GoodService {
     @Override
     public void doSomething() {
