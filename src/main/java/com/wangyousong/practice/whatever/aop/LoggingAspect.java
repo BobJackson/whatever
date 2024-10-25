@@ -48,4 +48,10 @@ public class LoggingAspect {
     private static void logMethodNameAndResult(Object result, String methodName) {
         log.debug("<< {}() - {}", methodName, result);
     }
+
+    @AfterThrowing(value = "publicMethod()", throwing = "exception")
+    public void logException(JoinPoint joinPoint, Throwable exception){
+        String methodName = joinPoint.getSignature().getName();
+        log.error("<< {}() - {}", methodName, exception.getMessage());
+    }
 }
