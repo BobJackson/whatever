@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'net.datafaker:datafaker:2.4.0'
     implementation 'commons-validator:commons-validator:1.9.0'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
 
 
     annotationProcessor 'org.projectlombok:lombok'
